@@ -1,32 +1,103 @@
 var mysql = require('mysql');
 var Consts = require('./consts');
 
-console.log(typeof Consts.DbConstants);
-
 
 
 module.exports = {
 
-
-
-	getAllUsers: function()
+	getAllUsers: function(callback)
 	{
 
-		connection.connect();
+		var connection = connect();
 
 		connection.query('SELECT * from  users', function(err, rows, fields)
 		{
 			if (err) throw err;
+			callback(rows);
+		});
 
-			console.log('The solution is: ', rows[0].username);
+		connection.end();
+	},
 
-			return rows;
+	getSingleUser: function(data, callback)
+	{
+
+		var connection = connect();
+
+		connection.query('SELECT * from  users where username = "' + data._id + '"', function(err, rows, fields)
+		{
+			if (err)
+			{
+				callback(err, null);
+				return;
+			}
+
+			callback(null, rows);
+		});
+
+		connection.end();
+
+	},
+
+	getSinglePost: function(data, callback)
+	{
+
+		var connection = connect();
+
+		connection.query('SELECT * from  Post where id = "' + data._id + '"', function(err, rows, fields)
+		{
+			if (err)
+			{
+				callback(err, null);
+				return;
+			}
+
+			callback(null, rows);
+		});
+
+		connection.end();
+
+	},
+
+	getAllPosts: function(callback)
+	{
+
+		var connection = connect();
+
+		connection.query('SELECT * from  Post', function(err, rows, fields)
+		{
+			if (err) throw err;
+
+
+
+			callback(rows);
+		});
+
+		connection.end();
+	},
+
+	createPost: function(data, callback)
+	{
+
+
+		var connection = connect();
+
+		var query='insert into Post values(0, curdate(),"' + data.message + '","' + data.username + '")';
+		console.log(query);
+		connection.query(query, function(err, rows, fields)
+		{
+			if (err)console.log(err);
+
+			callback();
 		});
 
 		connection.end();
 
 
+
 	}
+
+
 
 };
 
@@ -41,6 +112,6 @@ var connect = function()
 		database: Consts.DbConstants.DATABASE
 	});
 
-	return connction;
+	return connection;
 
 }

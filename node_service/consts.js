@@ -13,7 +13,7 @@ module.exports = {
 	Consts:
 	{
 		'USERS': 'users',
-		'constant2': 'value2'
+		'POSTS': 'posts'
 	},
 
 
